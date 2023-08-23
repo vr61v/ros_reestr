@@ -1,5 +1,4 @@
 import fitz
-from openpyxl import load_workbook
 import openpyxl.worksheet.worksheet
 from openpyxl.styles import Alignment
 
@@ -14,6 +13,8 @@ def countRequest():
 
 count = int(input("Количество pdf файлов: "))
 numberRequest = countRequest()
+excel = openpyxl.load_workbook(r"26.05.2023 Реестр по регистрационной работе.xlsx")
+
 
 for iterator in range(1, count + 1):
     fileName = f"{iterator}.pdf"
@@ -27,7 +28,6 @@ for iterator in range(1, count + 1):
     action = "Выписка из ЕГРН"
     date = findRequestDate(text)
 
-    excel = openpyxl.load_workbook(r"26.05.2023 Реестр по регистрационной работе.xlsx")
     page = excel['Реестр']
     max_row = page.max_row + 1
 
@@ -41,4 +41,4 @@ for iterator in range(1, count + 1):
         page[f'{letter}{max_row}'].number_format = openpyxl.styles.numbers.BUILTIN_FORMATS[15]
         page[f'{letter}{max_row}'].alignment = Alignment(horizontal="right")
 
-    excel.save(r"26.05.2023 Реестр по регистрационной работе.xlsx")
+excel.save(r"26.05.2023 Реестр по регистрационной работе.xlsx")
