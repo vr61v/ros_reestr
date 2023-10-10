@@ -1,25 +1,31 @@
+import os
 import fitz
-import openpyxl.worksheet.worksheet
-from appendFunctions import appendInExcel
-from findFunctions import findRegion, findAddress, findLocality, findRequestDate
+from appendFunctions import *
+from findFunctions import *
 
+if __name__ == '__main__':
+    files = []
+    for file in os.listdir("files"):
+        if ".pdf" in file: files.append(file)
 
-count = int(input("Количество pdf файлов: "))
-excel = openpyxl.load_workbook(r"26.05.2023 Реестр по регистрационной работе.xlsx")
-numberRequest = int(excel['Реестр'][f'A{excel["Реестр"].max_row}'].internal_value.split('/')[0]) + 1
+    excel = openpyxl.load_workbook(r"excel.xlsx")
+    numberRequest = findRequestNumber(excel)
+    fileNumber = 1
 
-for iterator in range(1, count + 1):
-    fileName = f"файл {iterator}.pdf"
-    pdf = fitz.open(fileName)
-    page = pdf.load_page(0)
-    text = page.get_text("text")
+    for file in files:
+        path = "files/" + file
+        pdf = fitz.open(path)
+        page = pdf.load_page(0)
+        text = page.get_text("text")
 
-    address = findAddress(text)
-    region = findRegion(address)
-    locality = findLocality(address)
-    action = "Выписка из ЕГРН"
-    date = findRequestDate(text)
+        address = findAddress(text)
+        region = findRegion(address)
+        locality = findLocality(address)
+        action = "Выписка из ЕГРН"
+        date = findRequestDate(text)
 
-    appendInExcel(excel, numberRequest, iterator, region, locality, address, action, date)
+        appendInExcel(excel, numberRequest, fileNumber, region, locality, address, action, date)
+        fileNumber += 1
+        pdf.close()
 
-excel.save(r"26.05.2023 Реестр по регистрационной работе.xlsx")
+    excel.save(r"excel.xlsx")

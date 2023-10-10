@@ -1,6 +1,7 @@
 import openpyxl.worksheet.worksheet
 from openpyxl.styles import Alignment
 
+
 def appendInExcel(excel, numberRequest, iterator, region, locality, address, action, date):
     page = excel['Реестр']
     max_row = page.max_row + 1

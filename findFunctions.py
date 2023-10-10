@@ -1,7 +1,9 @@
 import re
-from Constants import REGIONS
-from Constants import LOCALITIES
-from Constants import LOCALITIES__LEN
+from Constants import *
+
+
+def findRequestNumber(excel):
+    return int(excel['Реестр'][f'A{excel["Реестр"].max_row}'].internal_value.split('/')[0]) + 1
 
 
 def findAddress(text):
@@ -33,15 +35,17 @@ def findConsiderationDate(text):
 
 
 def findRegion(address):
-    addressSplit = re.split("[:,]", address)
+    addressSplit = re.split('[:,]', address)
     region = ''
 
     for i in addressSplit:
         for j in REGIONS:
             if i.find(j) >= 0:
                 region = i
-                if j == "Москва": return "Москва"
-                if j == "Санкт-Петербург": return "СПБ"
+                if j == "Москва":
+                    return "Москва"
+                if j == "Санкт-Петербург":
+                    return "СПБ"
                 break
         if region != '':
             break
@@ -50,32 +54,42 @@ def findRegion(address):
     regionUp = ''
     flag = False
     for i in regionSplit:
-        if i == '': continue
+        if i == '':
+            continue
         if i.find('обл') >= 0:
-            flag = True; continue
+            flag = True
+            continue
         regionUp += i[0].upper()
 
-    if flag: regionUp += 'О'
+    if flag:
+        regionUp += 'О'
     return regionUp
 
 
 def findLocality(address):
-    addressSplit = re.split("[:,]", address)
+    addressSplit = re.split('[:,]', address)
     locality = ""
 
     for i in addressSplit:
-        if len(re.findall("[0-9]", i)) > 0: continue
-        if len(re.findall(r"\\/,", i)) > 0: continue
+        if len(re.findall('[0-9]', i)) > 0:
+            continue
+        if len(re.findall(r'\\/,', i)) > 0:
+            continue
 
         for j in range(LOCALITIES__LEN):
             index = i.find(LOCALITIES[j])
-            if index == -1: continue
-            if LOCALITIES[j] == "Москва": return "Москва"
-            if LOCALITIES[j] == "Санкт-Петербург": return "СПБ"
+            if index == -1:
+                continue
+            if LOCALITIES[j] == "Москва":
+                return "Москва"
+            if LOCALITIES[j] == "Санкт-Петербург":
+                return "СПБ"
 
             if i[index + len(LOCALITIES[j])] == ' ' or i[index + len(LOCALITIES[j])] == '.':
-                if i[0] == ' ': locality = i[1:]
-                else: locality = i
+                if i[0] == ' ':
+                    locality = i[1:]
+                else:
+                    locality = i
                 break
 
         if locality != '':
