@@ -8,3 +8,9 @@
 *.xlsx
 
 *.docx
+
+__pycache__/
+
+build/
+
+dist/

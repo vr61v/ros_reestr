@@ -1,22 +1,23 @@
 import os
-import fitz
+
+from PyPDF2 import PdfReader
 from appendFunctions import *
 from findFunctions import *
 
-if __name__ == '__main__':
-    files = []
-    for file in os.listdir("files"):
-        if ".pdf" in file: files.append(file)
+files = []
+for file in os.listdir("files"):
+    if ".pdf" in file: files.append(file)
 
-    excel = openpyxl.load_workbook(r"excel.xlsx")
-    numberRequest = findRequestNumber(excel)
-    fileNumber = 1
+excel = openpyxl.load_workbook(r"excel.xlsx")
+numberRequest = findRequestNumber(excel)
+fileNumber = 1
 
-    for file in files:
+for file in files:
+    try:
         path = "files/" + file
-        pdf = fitz.open(path)
-        page = pdf.load_page(0)
-        text = page.get_text("text")
+        pdf = PdfReader(path)
+        page = pdf.pages[0]
+        text = page.extract_text("text")
 
         address = findAddress(text)
         region = findRegion(address)
@@ -26,6 +27,7 @@ if __name__ == '__main__':
 
         appendInExcel(excel, numberRequest, fileNumber, region, locality, address, action, date)
         fileNumber += 1
-        pdf.close()
+    except:
+        print(Exception)
 
-    excel.save(r"excel.xlsx")
+excel.save(r"excel1.xlsx")

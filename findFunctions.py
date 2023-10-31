@@ -1,25 +1,27 @@
 import re
 from Constants import *
 
-
 def findRequestNumber(excel):
     return int(excel['Реестр'][f'A{excel["Реестр"].max_row}'].internal_value.split('/')[0]) + 1
 
 
 def findAddress(text):
     textSplit = text.split(f'\n')
+    address = ""
     index = 0
 
     for i in range(len(textSplit)):
-        if textSplit[i].find("Местоположение") >= 0 or textSplit[i].find("Адрес") >= 0:
+        if textSplit[i].find("Местоположение") >= 0:
+            address = textSplit[i][16:]
             index = i + 1
-    address = textSplit[index]
-    index += 1
-
-    for i in range(index, len(textSplit)):
-        if textSplit[i].find("Площадь") >= 0 or textSplit[i] == '2':
             break
-        address += ' ' + textSplit[i]
+        if textSplit[i].find("Адрес") >= 0:
+            address = textSplit[i][7:]
+            index = i + 1
+            break
+    for j in range(index, len(textSplit)):
+        if textSplit[j].find("Площадь") >= 0: break
+        address += textSplit[j]
 
     return address
 
