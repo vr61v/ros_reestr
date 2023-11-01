@@ -28,6 +28,7 @@ for file in files:
         appendInExcel(excel, numberRequest, fileNumber, region, locality, address, action, date)
         fileNumber += 1
     except:
-        print(Exception)
+        print("The {" + file + "} crushed my program")
+        y = input("Enter any key for start")
 
 excel.save(r"excel1.xlsx")
