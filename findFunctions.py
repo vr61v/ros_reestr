@@ -25,6 +25,11 @@ def findAddress(text):
 
     return address
 
+def findCadastralNumber(text):
+    cadastralFind = text.find("Кадастровый номер:")
+    cadastral = text[cadastralFind:].split(f'\n')
+    return cadastral[0]
+
 
 def findRequestDate(text):
     right = text.find("запроса от ") + 11

@@ -19,7 +19,8 @@ for file in files:
         page = pdf.pages[0]
         text = page.extract_text("text")
 
-        address = findAddress(text)
+        cadastral = findCadastralNumber(text)
+        address = findAddress(text) + " " + cadastral
         region = findRegion(address)
         locality = findLocality(address)
         action = "Выписка из ЕГРН"
